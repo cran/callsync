@@ -24,10 +24,12 @@
 #' @param chunk_seq numeric vector or `NULL`. If supplied only these chunks are rerun.
 #' @param keys_id character vector of length 2. The characters before and after the unique ID of the
 #' individual or microphone. This can be in the file name or in the folder structure. E.g., if the path to the
-#' recording is `../data/week_1/recording_mic1.wav` the keys would be `c('recording', '.wav')`.
+#' recording is `../data/week_1/recording_mic1.wav` the keys would be `c('recording_', '.wav')` and the
+#' function would retrieve `mic1` as individual id.
 #' @param keys_rec character vector of length 2. The characters before and after the unique ID of the
 #' recording. This can be in the file name or in the folder structure. E.g., if the path to the recording
-#' is `../data/week_1/recording_mic1.wav` the keys would be `c('data/', '_mic')`.
+#' is `../data/week_1/recording_mic1.wav` the keys would be `c('data/', '/recording')` and the function would
+#' retrieve `week_1` as recording id.
 #' @param blank numeric, the duration in minutes to be discarded at the beginning and end of the recording.
 #' @param wing numeric, the duration in minutes to load before and after each chunk to improve alignment. This
 #' is not saved with the aligned chunk.
@@ -94,6 +96,7 @@ align = function(chunk_size = 15,
 
     # List files
     files = all_files[str_detect(all_files, rec)]
+    if(length(files) < 2) stop(sprintf('Not enough files for recording %s. Need at least two.', rec))
 
     # Check if sample rate is all the same
     minis = lapply(files, load.wave, from = 0, to = 0.1)
@@ -102,6 +105,8 @@ align = function(chunk_size = 15,
         return(seewave::resamp(x, g = down_sample, output = 'Wave'))
     })
     srs = sapply(minis, function(x) x@samp.rate)
+    if(any(is.na(srs))) stop('Could not retrieve sample rate for at least one file.
+                             Make sure only uncorrupted wav files have been included.')
     if(!stats::var(srs) == 0)
       warning(sprintf('Not all sample rates are equal. Check your raw data for recording %s.', rec))
 
@@ -109,7 +114,7 @@ align = function(chunk_size = 15,
     if(save_pdf){
       oldpar = par(no.readonly = TRUE)
       on.exit(par(oldpar))
-      pdf(sprintf('%s/%s.pdf', path_chunks, str_remove(basename(files[1]), '.wav')), 9, length(files)/2)
+      pdf(sprintf('%s/%s.pdf', path_chunks, str_remove(basename(files[1]), '.wav')), 9, length(files)/2+2)
       par(mfrow = c(length(files), 1), mar = c(0, 0, 0, 0), oma = c(5, 1, 3, 1))
     }
 

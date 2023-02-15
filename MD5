@@ -1,12 +1,12 @@
-b5b85ea12c753835e2e9bbdf04e9ce02 *DESCRIPTION
+20b1965915db44e1016192bbf3a6399b *DESCRIPTION
 46ded567a0a82caf399f0d5d654eb350 *NAMESPACE
-0c029160f6baf40de32f47317b10237f *NEWS.md
-dfb681b993cda4849bce4ebbed91cac5 *R/align.R
+ef39d1671239dcfad45b3ed90bdee1ff *NEWS.md
+435298dfc4daa0dd32996c457ea6f119 *R/align.R
 58375873611ee4a29ab97a9e99a55cce *R/better.spectro.R
 28a793493c03acc93f562f01f34d09ee *R/calc.am.R
 4ed87a166ef78bac06801ddfb211a594 *R/calc.fm.R
 3fb21638e2e25d1fd67a8019a9e9fdbe *R/calc.perf.R
-1ccf07d6bcefd9be22b770c1c6aee54a *R/call.assign.R
+2c823218f872d48590a527416548751f *R/call.assign.R
 a1706e404d326f46e4a300a8f4de3557 *R/call.detect.R
 afe278c08f8f1bfb158c609fcebc2030 *R/call.detect.multiple.R
 7db4ea86a42cfb1f5bb91c7811809ee4 *R/create.spec.object.R
@@ -21,7 +21,8 @@ f66d05d8cdc40ccdd659435fb8a2c81a *R/load.wave.R
 9e80dd16692a7293d267cfdbefab4af4 *R/simple.cc.R
 6e17d0e601e90f36afbc5ce144016037 *R/sliding.pixel.comparison.R
 e7fb6b7e7cf95cc1c4138746a28100c8 *R/trace.fund.R
-eece7cf975ad76d8af44a407029fe757 *man/align.Rd
+bf04eaee869c45d1abc5617b58f98a83 *inst/CITATION
+3311f8963e16eff162a9efac17790a87 *man/align.Rd
 16563c5e2398f3ee2189053d4423a0cb *man/better.spectro.Rd
 df6ff6f2fc566cd074f8437285b39779 *man/calc.am.Rd
 b255fdfee997647b887797aef9b0e209 *man/calc.fm.Rd
@@ -42,7 +43,7 @@ b3ba9b7c968e4f4066b6b0f13f72ca15 *man/run.spcc.Rd
 9b778fee562ad675d0aed48e42a140fa *man/sliding.pixel.comparison.Rd
 1cd5b260acc9993c9adefe3372ed768a *man/trace.fund.Rd
 422a473bf7aaa81d6e0d611cdacc8f70 *tests/testthat.R
-80badc106fe83908f32d6125c5269254 *tests/testthat/Rplots.pdf
+387eb2d75bf37f65f37af910017a2994 *tests/testthat/Rplots.pdf
 1e084d36edfcb59c820637a614c9a5b6 *tests/testthat/files/2020_10_27_091634.Table.1.selections.txt
 2298e5a05c8dbad744858518b0289d98 *tests/testthat/files/2020_10_27_132148.Table.1.selections.txt
 de05b60063587ad14bfa1e74a580be64 *tests/testthat/files/audacity/chunk_15_ground_truth.txt
