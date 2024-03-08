@@ -42,6 +42,33 @@
 #'
 #' @return saves all the aligned chunks in the location specific by `path_chunks`.
 #'
+#' @examples \dontrun{
+#' require(callsync)
+#' require(seewave)
+#' require(tuneR)
+#' path_git = 'https://raw.githubusercontent.com'
+#' path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+#' file_1 = '/chunk@1@1@1@1.wav'
+#' file_2 = '/chunk@2@1@1@1.wav'
+#' url_1 = paste0(path_git, path_repo, file_1)
+#' url_2 = paste0(path_git, path_repo, file_2)
+#' local_file_1 = paste(tempdir(), file_1, sep = '/')
+#' local_file_2 = paste(tempdir(), file_2, sep = '/')
+#' if(!file.exists(local_file_1))
+#'   download.file(url_1, destfile = local_file_1, mode = 'wb',)
+#' if(!file.exists(local_file_2))
+#'   download.file(url_2, destfile = local_file_2, mode = 'wb')
+#' all_files = c(local_file_1, local_file_2)
+#' a = align(chunk_size = 2,
+#'           step_size = 0.1,
+#'           all_files = all_files,
+#'           keys_id = c('c', '@'),
+#'           keys_rec = c('c', '@'),
+#'           blank = 0,
+#'           wing = 0,
+#'           quiet = TRUE)
+#'}
+#'
 #' @export
 #'
 #' @importFrom tuneR "readWave"
@@ -114,7 +141,7 @@ align = function(chunk_size = 15,
     if(save_pdf){
       oldpar = par(no.readonly = TRUE)
       on.exit(par(oldpar))
-      pdf(sprintf('%s/%s.pdf', path_chunks, str_remove(basename(files[1]), '.wav')), 9, length(files)/2+2)
+      pdf(sprintf('%s/%s.pdf', path_chunks, str_remove(basename(files[1]), '.wav')), 9, length(files)/3+2)
       par(mfrow = c(length(files), 1), mar = c(0, 0, 0, 0), oma = c(5, 1, 3, 1))
     }
 
@@ -132,7 +159,7 @@ align = function(chunk_size = 15,
       chunk_seq = seq(blank, # start after the blank
                       min_duration-blank-chunk_size, # until minimum duration - blank and chunk
                       chunk_size) # by chunk steps
-    if(!quiet) message(sprintf('Running %s recordings with id: %s. Running %s chunks with start times: ',
+    if(!quiet) message(sprintf('Running %s recordings with id: %s. Running %s chunk(s) with start time(s): ',
                                length(files), rec, length(chunk_seq)))
     for(chunk in chunk_seq){
       if(!quiet) message(chunk)
@@ -144,9 +171,9 @@ align = function(chunk_size = 15,
 
       # Optionally save alignment log
       if(save_log) align_log = rbind(align_log, data.frame(rec = rec, file = files[1], chunk = chunk,
-                                                           from = chunk,
-                                                           to = chunk + chunk_size,
-                                                           offset = 0))
+                                                           from_min = chunk,
+                                                           to_min = chunk + chunk_size,
+                                                           offset_min = 0))
 
       # Sum the sound per step
       step = master@samp.rate*step_size
@@ -161,7 +188,7 @@ align = function(chunk_size = 15,
         plot(times, s1,
              type = 'l', xlim = c(-wing/2, max(times) + wing/2), xaxt = 'n', yaxt = 'n',
              main = '', col = '#3a586e')
-        mtext(chunk, line = 1)
+        mtext(sprintf('start time chunk: %s min', chunk), line = 1)
       }
 
       # Save master
@@ -199,9 +226,9 @@ align = function(chunk_size = 15,
 
         # Optionally save alignment log
         if(save_log) align_log = rbind(align_log, data.frame(rec = rec, file = files[i], chunk = chunk,
-                                                             from = chunk + d,
-                                                             to = chunk + chunk_size + d,
-                                                             offset = d))
+                                                             from_min = chunk + d,
+                                                             to_min = chunk + chunk_size + d,
+                                                             offset_min = d))
 
         # Plot
         if(save_pdf){

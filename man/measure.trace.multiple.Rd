@@ -14,10 +14,11 @@ measure.trace.multiple(
 )
 }
 \arguments{
-\item{traces}{a list of data frames, e.g., the output of the `trace.fund` function. Should contain columns
-with time = time in seconds, fund = fundamental frequency in Hz and missing = logical indicating if the
-fundamental was detected (`TRUE`) or interpolated (`FALSE`). If the list is named the names will be used
-as file names in the output.}
+\item{traces}{a list of data frames, e.g., the output of the `trace.fund`
+function. Should contain columns with time = time in seconds, fund =
+fundamental frequency in Hz and missing = logical indicating if the
+fundamental was detected (`TRUE`) or interpolated (`FALSE`). If the list is
+named the names will be used as file names in the output.}
 
 \item{new_waves}{a list of wave objects, should only contain the call.}
 
@@ -25,13 +26,43 @@ as file names in the output.}
 
 \item{detections}{the detections.}
 
-\item{sr}{numeric, sample rate of the waves objects used for the traces. Only needed if `waves` is `NULL`.}
+\item{sr}{numeric, sample rate of the waves objects used for the traces.
+Only needed if `waves` is `NULL`.}
 
-\item{path_pdf}{numeric or `NULL`, where to store the pdf. If `NULL` no pdf is stored.}
+\item{path_pdf}{numeric or `NULL`, where to store the pdf. If `NULL` no pdf
+is stored.}
 }
 \value{
 Returns a data frame with all measurements.
 }
 \description{
-Takes several measurements on multiple fundamental frequency traces.
+Takes several measurements on multiple fundamental frequency
+traces.
+}
+\examples{
+\dontrun{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/wave_1.wav'
+file_2 = '/wave_2.wav'
+url_1 = paste0(path_git, path_repo, file_1)
+url_2 = paste0(path_git, path_repo, file_2)
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+local_file_2 = paste(tempdir(), file_2, sep = '/')
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+if(!file.exists(local_file_2))
+  download.file(url_2, destfile = local_file_2, mode = 'wb')
+all_files = c(local_file_1, local_file_2)
+waves = lapply(all_files, load.wave)
+new_waves = waves
+detections = lapply(waves, call.detect)
+traces = lapply(waves, trace.fund)
+mt = measure.trace.multiple(traces = traces, waves = waves,
+                            new_waves = new_waves, detections = detections)
+}
+
 }

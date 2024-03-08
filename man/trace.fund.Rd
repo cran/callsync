@@ -21,18 +21,47 @@ trace.fund(
 
 \item{wl}{integer, window length for the spectrum}
 
-\item{freq_lim}{numeric vector of length 2, frequency in kHz between which to find the fundamental}
+\item{freq_lim}{numeric vector of length 2, frequency in kHz between which
+to find the fundamental}
 
 \item{spar}{numeric between 0-1, for the `smooth.spline` function}
 
-\item{noise_factor}{numeric, how much louder the fundamental has to be than the noise to be accepted}
+\item{noise_factor}{numeric, how much louder the fundamental has to be
+than the noise to be accepted}
 
-\item{thr}{numeric between 0-1, the fraction of the maximum of the spectrum used to detect the fundamental}
+\item{thr}{numeric between 0-1, the fraction of the maximum of the spectrum
+used to detect the fundamental}
 }
 \value{
-Data frame with time = time in seconds, fund = fundamental frequency in Hz and missing = logical
-indicating if the fundamental was detected (`TRUE`) or interpolated (`FALSE`).
+Data frame with time = time in seconds, fund = fundamental
+frequency in Hz and missing = logical indicating if the fundamental was
+detected (`TRUE`) or interpolated (`FALSE`).
 }
 \description{
-Traces the fundamental frequency from a wave object. Also applies smoothening to trace.
+Traces the fundamental frequency from a wave object. Also
+applies smoothening to trace.
+}
+\details{
+Tracing step is based on a sliding window for which the spectrum
+is calculated. A threshold is based on the maximum y value and the first
+frequency to cross the threshold is considered the fundamental frequency.
+If the average hight before the fundamental is higher than `noise_factor`,
+the detection is discarded and NA is returned for that window.
+Smoothing step is based on `smooth.spline`. Finally, all points outside
+`freq_lim` are reset to these limits.
+}
+\examples{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/wave_1.wav'
+url_1 = paste0(path_git, path_repo, file_1)
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+wave = readWave(local_file_1)
+trace = trace.fund(wave)
+
 }

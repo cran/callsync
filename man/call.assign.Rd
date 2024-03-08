@@ -31,8 +31,8 @@ returned.}
 
 \item{ffilter_from}{numeric, frequency in Hz for the high-pass filter.}
 
-\item{wing}{numeric, the duration in minutes to load before and after each chunk to improve alignment. This
-is not saved with the aligned chunk.}
+\item{wing}{numeric, the duration in seconds to load before and after each detection to improve alignment.
+This is not saved with the aligned call.}
 
 \item{step_size}{numeric, duration in seconds of the bins for signal compression before cross correlation.
 Default is `0.01`.}
@@ -52,4 +52,35 @@ samples for each detection.
 \description{
 Assigns calls from a detection table. Or rather removes calls that are not the loudest and
 returns the cleaned detection table. Uses fine alignment and energy content.
+}
+\examples{
+\dontrun{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/chunk@1@1@1@1.wav'
+file_2 = '/chunk@2@1@1@1.wav'
+url_1 = paste0(path_git, path_repo, file_1)
+url_2 = paste0(path_git, path_repo, file_2)
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+local_file_2 = paste(tempdir(), file_2, sep = '/')
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+if(!file.exists(local_file_2))
+  download.file(url_2, destfile = local_file_2, mode = 'wb')
+all_files = c(local_file_1, local_file_2)
+detections = lapply(all_files, function(file){
+  wave = load.wave(file, ffilter_from = 1100)
+  detections = call.detect.multiple(wave, plot_it = FALSE)
+  return(detections)
+})
+names(detections) = basename(all_files)
+ca = call.assign(all_files = all_files,
+                 detections = detections,
+                 quiet = TRUE,
+                 save_files = FALSE)
+}
+
 }

@@ -18,33 +18,63 @@ run.spcc(
 )
 }
 \arguments{
-\item{waves}{a list of wave objects, e.g., from `lapply` in combination with `load.wave` or `readWave`.}
+\item{waves}{a list of wave objects, e.g., from `lapply` in combination with
+`load.wave` or `readWave`.}
 
-\item{freq_range}{numeric vector of length 2, the frequency range in Hz to return.}
+\item{freq_range}{numeric vector of length 2, the frequency range in Hz to
+return.}
 
-\item{thr_low}{numeric, the lower range (see `method`). Pixels with lower values are set to 0 for noise
+\item{thr_low}{numeric, the lower range (see `method`). Pixels with lower
+values are set to 0 for noise
 reduction.}
 
-\item{thr_high}{numeric, the upper range (see `method`). Pixels with higher values are set to `thr_high`.}
+\item{thr_high}{numeric, the upper range (see `method`). Pixels with higher
+values are set to `thr_high`.}
 
 \item{wl}{numeric, window length in samples. Default is `512`.}
 
 \item{ovl}{numeric, overlap in samples. Default is `450`.}
 
-\item{method}{character, either `sd` or `max`. If `sd`, pixels are standardised. If `max`, pixels are
+\item{method}{character, either `sd` or `max`. If `sd`, pixels are
+standardised. If `max`, pixels are
 normalised.}
 
-\item{sum_one}{logical, if `TRUE` pixels are divided by the sum of all pixels, such that they sum to one.}
+\item{sum_one}{logical, if `TRUE` pixels are divided by the sum of all
+pixels, such that they sum to one.}
 
-\item{mc.cores}{numeric, how many threads to run in parallel. For Windows only one can be used.}
+\item{mc.cores}{numeric, how many threads to run in parallel. For Windows
+only one can be used.}
 
-\item{step_size}{numeric, argument for `sliding.pixel.comparison` how many pixels should be moved for each
+\item{step_size}{numeric, argument for `sliding.pixel.comparison` how many
+pixels should be moved for each
 step. Default is `10`.}
 }
 \value{
-Matrix with row and columns names equal to the names of the wave list. Diagonal is zeroes. Other
-values are the normalised pairwise distances from `sliding.pixel.comparison`.
+Matrix with row and columns names equal to the names of the wave
+list. Diagonal is zeroes. Other values are the normalised pairwise
+distances from `sliding.pixel.comparison`.
 }
 \description{
-Runs spectrograph cross correlation on multiple wave objects.
+Runs spectrographic cross correlation on multiple wave objects.
+}
+\examples{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/wave_1.wav'
+file_2 = '/wave_2.wav'
+url_1 = paste0(path_git, path_repo, file_1)
+url_2 = paste0(path_git, path_repo, file_2)
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+local_file_2 = paste(tempdir(), file_2, sep = '/')
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+if(!file.exists(local_file_2))
+  download.file(url_2, destfile = local_file_2, mode = 'wb')
+all_files = c(local_file_1, local_file_2)
+waves = lapply(all_files, load.wave)
+spcc_out = run.spcc(waves)
+
 }

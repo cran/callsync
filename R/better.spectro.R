@@ -15,6 +15,21 @@
 #'
 #' @return Plots the spectrogram to current window.
 #'
+#' @examples
+#'
+#' require(callsync)
+#' require(seewave)
+#' require(tuneR)
+#' path_git = 'https://raw.githubusercontent.com'
+#' path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+#' file_1 = '/wave_1.wav'
+#' url_1 = paste0(path_git, path_repo, file_1)
+#' local_file_1 = paste(tempdir(), file_1, sep = '/')
+#' if(!file.exists(local_file_1))
+#'   download.file(url_1, destfile = local_file_1, mode = 'wb',)
+#' wave = readWave(local_file_1)
+#' better.spectro(wave)
+#'
 #' @export
 #'
 #' @importFrom signal "specgram"
@@ -57,12 +72,13 @@ better.spectro = function(wave,
   if(is.null(ylim[1])) ylim = c(min(spec$f), max(spec$f))
 
   # Plot spectrogram
+  if(min(P) == -Inf) warning('min(P) is -Inf, something might be wrong.')
   oce::imagep(x = spec$t,
               y = spec$f,
               z = t(P),
               ylab = 'Frequency [Hz]',
               xlab = 'Time [s]',
-              zlim = c(min(P), max(P)),
+              zlim = c(max(min(P), -200), max(P)),
               xlim = xlim,
               ylim = ylim,
               col = hcl.colors(20, "RdBu", rev = TRUE) ,

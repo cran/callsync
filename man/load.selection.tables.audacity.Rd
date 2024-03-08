@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.selection.tables.audacity.R
 \name{load.selection.tables.audacity}
 \alias{load.selection.tables.audacity}
-\title{load.selection.tables}
+\title{load.selection.tables.audacity}
 \usage{
 load.selection.tables.audacity(path_selection_tables)
 }
@@ -15,4 +15,20 @@ Returns data frame with all selection tables.
 }
 \description{
 Loads multiple Audacity selection tables into one data frame.
+}
+\examples{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/audacity/chunk_15_ground_truth.txt'
+url_1 = paste0(path_git, path_repo, file_1)
+local_dir = paste(tempdir(), 'audacity', sep = '/')
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+if(!dir.exists(local_dir)) dir.create(local_dir)
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+st = load.selection.tables.audacity(path_selection_tables = local_dir)
+
 }

@@ -7,16 +7,36 @@
 calc.perf(d, gt)
 }
 \arguments{
-\item{d}{data frame, detection selection table with start = start time in seconds, end = end time in
-seconds and file = file name}
+\item{d}{data frame, detection selection table with start = start time in
+seconds, end = end time in  seconds and file = file name}
 
-\item{gt}{data frame, ground truth selection table with start = start time in seconds, end = end time in
-seconds and file = file name}
+\item{gt}{data frame, ground truth selection table with start = start time
+in seconds, end = end time in seconds and file = file name}
 }
 \value{
-Returns a named list with tp = the row numbers (in d) for the true positives, fp = the row numbers (in d) for the
-false positives, fp_rate = `length(pf)/nrow(d)` and tp_rate = `length(tp)/nrow(gt)`.
+Returns a named list with tp = the row numbers (in d) for the true
+positives, fp = the row numbers (in d) for the false positives, fn = the row
+numbers (in gt) for the false negatives, fp_rate = `length(fp)/nrow(d)`,
+tp_rate = `length(tp)/nrow(gt)`, fn_rate = `length(fn)/nrow(gt)`.
 }
 \description{
-Calculates the performance of the detections.
+Calculates the performance of the detections. Detections are
+true positive if they overlap to any extend with a ground truth selection.
+}
+\examples{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/audacity/chunk_15_ground_truth.txt'
+url_1 = paste0(path_git, path_repo, file_1)
+local_dir = paste(tempdir(), 'audacity', sep = '/')
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+if(!dir.exists(local_dir)) dir.create(local_dir)
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+d = load.selection.tables.audacity(path_selection_tables = local_dir)
+result = calc.perf(d, d)
+
 }

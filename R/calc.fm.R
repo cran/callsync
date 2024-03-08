@@ -3,13 +3,31 @@
 #' @description Calculates the frequency modulation for a wave object and returns several measurements in
 #' a data frame.
 #'
-#' @param trace numeric vector, e.g., the fundamental frequency from `trace.fund`.
+#' @param trace numeric vector, e.g., the fundamental frequency from
+#' `trace.fund`, NOTE this would be `trace$fund` and not the whole `trace`
+#' object.
 #' @param min_height the minimum difference between a bottom and a peak for an infliction point to be
 #' accepted.
 #' @param plot_it logical, if `TRUE` plot the trace and peaks to current window. Default is `FALSE`.
 #'
-#' @return Returns a data frame with fm = median difference between peaks and bottoms and ipi = inter peak
+#' @return Returns a data frame with fm = median difference between peaks and bottoms and ipi = inter peak,
+#' np = number of peaks.
 #' interval (s).
+#'
+#' @examples
+#' require(callsync)
+#' require(seewave)
+#' require(tuneR)
+#' path_git = 'https://raw.githubusercontent.com'
+#' path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+#' file_1 = '/wave_1.wav'
+#' url_1 = paste0(path_git, path_repo, file_1)
+#' local_file_1 = paste(tempdir(), file_1, sep = '/')
+#' if(!file.exists(local_file_1))
+#'   download.file(url_1, destfile = local_file_1, mode = 'wb',)
+#' wave = readWave(local_file_1)
+#' trace = trace.fund(wave)
+#' result = calc.fm(trace$fund)
 #'
 #' @importFrom stats "median"
 #' @importFrom graphics "points"
@@ -76,15 +94,18 @@ calc.fm = function(trace,
   if(nrow(peaks) < 2){
     ipi = NA
     fm = NA
+    np = NA
   } else {
     infl = rbind(peaks, bottoms)
     infl = infl[order(infl[,1]),]
     fm = median(diff(infl))
     ipi = median(diff(peaks[,1]))
+    np = nrow(peaks)
   }
 
   # Return
   return(list(fm = fm,
-              ipi = ipi))
+              ipi = ipi,
+              np = np))
 
 } # end calc.fm

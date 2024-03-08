@@ -82,3 +82,32 @@ and after them (see examples in the argument descriptions). The function loads c
 sums the absolute amplitude per bin and runs cross correlation to find alignment relative to the first
 recording. The aligned chunks are then saved.
 }
+\examples{
+\dontrun{
+require(callsync)
+require(seewave)
+require(tuneR)
+path_git = 'https://raw.githubusercontent.com'
+path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+file_1 = '/chunk@1@1@1@1.wav'
+file_2 = '/chunk@2@1@1@1.wav'
+url_1 = paste0(path_git, path_repo, file_1)
+url_2 = paste0(path_git, path_repo, file_2)
+local_file_1 = paste(tempdir(), file_1, sep = '/')
+local_file_2 = paste(tempdir(), file_2, sep = '/')
+if(!file.exists(local_file_1))
+  download.file(url_1, destfile = local_file_1, mode = 'wb',)
+if(!file.exists(local_file_2))
+  download.file(url_2, destfile = local_file_2, mode = 'wb')
+all_files = c(local_file_1, local_file_2)
+a = align(chunk_size = 2,
+          step_size = 0.1,
+          all_files = all_files,
+          keys_id = c('c', '@'),
+          keys_rec = c('c', '@'),
+          blank = 0,
+          wing = 0,
+          quiet = TRUE)
+}
+
+}

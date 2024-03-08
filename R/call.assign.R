@@ -11,8 +11,8 @@
 #' @param save_files logical, if `TRUE` the files are stored in the `path_chunks` location. Results are also
 #' returned.
 #' @param ffilter_from numeric, frequency in Hz for the high-pass filter.
-#' @param wing numeric, the duration in minutes to load before and after each chunk to improve alignment. This
-#' is not saved with the aligned chunk.
+#' @param wing numeric, the duration in seconds to load before and after each detection to improve alignment.
+#' This is not saved with the aligned call.
 #' @param step_size numeric, duration in seconds of the bins for signal compression before cross correlation.
 #' Default is `0.01`.
 #' @param assign_fraq numeric between 0 and 1, how much louder does the focal needs to be than the second
@@ -23,6 +23,35 @@
 #'
 #' @return Returns a data frame with file = file name, start = start time in samples and end = end time in
 #' samples for each detection.
+#'
+#' @examples \dontrun{
+#' require(callsync)
+#' require(seewave)
+#' require(tuneR)
+#' path_git = 'https://raw.githubusercontent.com'
+#' path_repo = '/simeonqs/callsync/master/tests/testthat/files'
+#' file_1 = '/chunk@1@1@1@1.wav'
+#' file_2 = '/chunk@2@1@1@1.wav'
+#' url_1 = paste0(path_git, path_repo, file_1)
+#' url_2 = paste0(path_git, path_repo, file_2)
+#' local_file_1 = paste(tempdir(), file_1, sep = '/')
+#' local_file_2 = paste(tempdir(), file_2, sep = '/')
+#' if(!file.exists(local_file_1))
+#'   download.file(url_1, destfile = local_file_1, mode = 'wb',)
+#' if(!file.exists(local_file_2))
+#'   download.file(url_2, destfile = local_file_2, mode = 'wb')
+#' all_files = c(local_file_1, local_file_2)
+#' detections = lapply(all_files, function(file){
+#'   wave = load.wave(file, ffilter_from = 1100)
+#'   detections = call.detect.multiple(wave, plot_it = FALSE)
+#'   return(detections)
+#' })
+#' names(detections) = basename(all_files)
+#' ca = call.assign(all_files = all_files,
+#'                  detections = detections,
+#'                  quiet = TRUE,
+#'                  save_files = FALSE)
+#'}
 #'
 #' @export
 #'
@@ -95,6 +124,8 @@ call.assign = function(all_files = NULL,
 
         # Subset the detections
         detects = detections[[basename(audio_files[i])]]
+        detects = detects[detects$start - wing*wave@samp.rate > 1 &
+                            detects$end + wing*wave@samp.rate < length(wf@left),]
 
         # Plot wave
         plot(wf, xaxs = 'i', xaxt = 'n', nr = 15*2500)

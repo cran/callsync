@@ -28,3 +28,28 @@
 # callsync 0.0.6
 
 * Added CITATION file for the preprint. 
+
+# callsync 0.0.7
+
+* `calc.fm` now also output the number of peaks (np). 
+* Fixed bug in `call.detect.multiple`. If save_extra was used, it sometimes stored clips outside the range
+  of the wave file (if detections were close to start or end). Now these start and end times are replaced 
+  by 0 and the length of the wave file.
+* Fixed bug in `detect.and.assign`. If detections were too close to the bounds, the wing went outside the 
+  chunk. These detections are now removed, since they cannot be aligned. 
+  
+# callsync 0.1.0
+
+* Adding additional functions and modifying/adding options to existing functions. All
+  original functions should still work without changing any settings. 
+  
+# callsync 0.2.0
+
+* Adding vignette.
+* Minor updates to descriptions.
+* Adding units to column titles align_log.
+
+# callsync 0.2.1
+
+* Removing files from inst/extdata, now downloading from GitHub instead. 
+* Speeding up testing and code examples. 
