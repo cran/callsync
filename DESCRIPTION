@@ -2,7 +2,7 @@ Package: callsync
 Type: Package
 Title: Recording Synchronisation, Call Detection and Assignment, Audio
         Analysis
-Version: 0.2.1
+Version: 0.2.3
 Authors@R: c(person("Simeon Q.", "Smeele", email = "simeonqs@hotmail.com", role = c("cre","aut")),
   person("Stephen A.", "Tyndel", email = "styndel@ab.mpg.de", role = c("ctb")))
 Description: Intended to analyse recordings from multiple microphones (e.g., backpack
@@ -22,13 +22,13 @@ Imports: dplyr (>= 1.0.10), oce (>= 1.7), seewave (>= 2.2.0), signal
         1.2.1)
 Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-03-08 11:15:20 UTC; au472091
+Packaged: 2024-05-24 10:03:16 UTC; au472091
 Author: Simeon Q. Smeele [cre, aut],
   Stephen A. Tyndel [ctb]
 Maintainer: Simeon Q. Smeele <simeonqs@hotmail.com>
 Repository: CRAN
-Date/Publication: 2024-03-08 12:00:02 UTC
+Date/Publication: 2024-05-24 10:20:03 UTC
